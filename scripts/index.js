@@ -44,11 +44,19 @@ const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 
 /*Variaveis Titulo e Descrição Atualizadas*/
-const nameInput = document.querySelector(".popup__input_type_name");
-const aboutInput = document.querySelector(".popup__input_type_description");
+let nameInput = document.querySelector(".popup__input_type_name");
+let aboutInput = document.querySelector(".popup__input_type_description");
 
 /*Variavel do Formulario*/
 const editForm = editModal.querySelector(".popup__form");
+
+/*Templete */
+const cardTemplate = document
+  .querySelector("#card-template")
+  .content.querySelector(".card");
+
+/*Local onde os Cards Serão Criados*/
+const cardsContainer = document.querySelector(".cards__list");
 
 /* Funçao Abrir PopUp */
 
@@ -97,3 +105,36 @@ closeModal(closeEditButton);
 /*Salvando as Informacoes*/
 
 editForm.addEventListener("submit", handleProfileFormSubmit);
+
+/*Criando Função para Gerar Cards*/
+function getCardElement(name, link) {
+  if (!name) {
+    name = "Lugar sem nome";
+  }
+
+  if (!link) {
+    link = "./images/placeholder.jpg";
+  }
+
+  const cardElement = cardTemplate.cloneNode(true);
+
+  const nameElement = cardElement.querySelector(".card__title");
+  nameElement.textContent = name;
+
+  const altElement = cardElement.querySelector(".card__image");
+  altElement.alt = name;
+
+  const srcElement = cardElement.querySelector(".card__image");
+  srcElement.src = link;
+
+  return cardElement;
+}
+
+function renderCard(name, link, container) {
+  const cardElement = getCardElement(name, link);
+  container.prepend(cardElement);
+}
+
+initialCards.forEach((item) => {
+  renderCard(item.name, item.link, cardsContainer);
+});
