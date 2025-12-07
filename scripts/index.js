@@ -76,6 +76,13 @@ const newCardForm = newModal.querySelector(".popup__form");
 let cardNameInput = document.querySelector(".popup__input_type_card-name");
 let urlInput = document.querySelector(".popup__input_type_url");
 
+/*Variavel do New Popup*/
+const imageModal = document.querySelector("#image-popup");
+/*Criando Variavel para o Botão Fechar ImagePopup*/
+const closeImageButton = imageModal.querySelector(".popup__close");
+const imageElement = imageModal.querySelector(".popup__image");
+const captionElement = imageModal.querySelector(".popup__caption");
+
 /* Funçao Abrir PopUp */
 
 function openModal(arg, modal) {
@@ -136,6 +143,19 @@ function removeCard(evt) {
   }
 }
 
+function openImageModal(name, link) {
+  imageElement.src = link; // Atualiza a imagem do modal
+  imageElement.alt = name; // Atualiza o alt
+  captionElement.textContent = name; // Atualiza a legenda
+  imageModal.classList.add("popup_is-opened"); // Abre o modal
+}
+
+function closeImageModal() {
+  imageModal.classList.remove("popup_is-opened");
+}
+closeImageButton.addEventListener("click", function () {
+  imageModal.classList.remove("popup_is-opened");
+});
 /*Criando Função para Gerar Cards*/
 function getCardElement(name, link) {
   if (!name) {
@@ -160,10 +180,15 @@ function getCardElement(name, link) {
   const likeButton = cardElement.querySelector(".card__like-button");
   /*2. ao clicar muda a classe do botao curtir*/
   likeButton.addEventListener("click", handleLikeButton);
-
+  /*1. Seleciona o botão de delete dentro do card*/
   const deleteButton = cardElement.querySelector(".card__delete-button");
-  /*1. ao clicar remove o cartao da DOM*/
+  /*2. ao clicar remove o cartao da DOM*/
   deleteButton.addEventListener("click", removeCard);
+
+  /*2. ao clicar remove o cartao da DOM*/
+  imageElement.addEventListener("click", function () {
+    openImageModal(name, link);
+  });
 
   return cardElement;
 }
