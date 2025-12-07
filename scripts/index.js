@@ -80,6 +80,7 @@ let urlInput = document.querySelector(".popup__input_type_url");
 const imageModal = document.querySelector("#image-popup");
 /*Criando Variavel para o Botão Fechar ImagePopup*/
 const closeImageButton = imageModal.querySelector(".popup__close");
+/*Criando Variavel para a Imagem do Popup ( Imagem e Caption )*/
 const imageElement = imageModal.querySelector(".popup__image");
 const captionElement = imageModal.querySelector(".popup__caption");
 
@@ -149,13 +150,8 @@ function openImageModal(name, link) {
   captionElement.textContent = name; // Atualiza a legenda
   imageModal.classList.add("popup_is-opened"); // Abre o modal
 }
+closeModal(closeImageButton, imageModal);
 
-function closeImageModal() {
-  imageModal.classList.remove("popup_is-opened");
-}
-closeImageButton.addEventListener("click", function () {
-  imageModal.classList.remove("popup_is-opened");
-});
 /*Criando Função para Gerar Cards*/
 function getCardElement(name, link) {
   if (!name) {
