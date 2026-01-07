@@ -84,6 +84,9 @@ const closeImageButton = imageModal.querySelector(".popup__close");
 const imageElement = imageModal.querySelector(".popup__image");
 const captionElement = imageModal.querySelector(".popup__caption");
 
+/* Variaveis do Formulario */
+
+const editButtonSubmit = editForm.querySelector(".popup__button");
 /* Funçao Abrir PopUp */
 
 function openModal(arg, modal) {
@@ -108,12 +111,17 @@ function fillProfileForm() {
 /* Funçao Para abrir o modo de edição e preencher os Campos nome e descrição */
 function handleOpenEditModal() {
   fillProfileForm();
+  checkFormValidity();
   openModal(editButton, editModal);
 }
 /* Funçao Para Alterar os Campos nome e descrição e depois salvar*/
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
+
+  if (!editForm.reportValidity()) {
+    return; // mostra mensagens padrão
+  }
 
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = aboutInput.value;
@@ -217,3 +225,8 @@ function handleCardFormSubmit(evt) {
   newModal.classList.remove("popup_is-opened");
 }
 newCardForm.addEventListener("submit", handleCardFormSubmit);
+
+function checkFormValidity() {
+  editButtonSubmit.disabled = !editForm.checkValidity();
+}
+editForm.addEventListener("input", checkFormValidity);

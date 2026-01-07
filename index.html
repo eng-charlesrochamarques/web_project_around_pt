@@ -74,14 +74,22 @@
               name="name"
               placeholder="Nome"
               type="text"
+              required
+              minlength="2"
+              maxlength="40"
             />
             <input
               class="popup__input popup__input_type_description"
               name="description"
               placeholder="Sobre mim"
               type="text"
+              required
+              minlength="2"
+              maxlength="200"
             />
-            <button class="button popup__button" type="submit">Salvar</button>
+            <button class="button popup__button" type="submit" disabled>
+              Salvar
+            </button>
           </form>
         </div>
       </div>
