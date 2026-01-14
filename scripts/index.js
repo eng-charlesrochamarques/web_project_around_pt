@@ -77,16 +77,16 @@ function closeModal(modal) {
 }
 
 function clearFormErrors(form) {
-  const errors = form.querySelectorAll(".popup__form__input-error");
+  const errors = form.querySelectorAll(".popup__input-error");
   const inputs = form.querySelectorAll(".popup__input");
 
   errors.forEach((e) => {
     e.textContent = "";
-    e.classList.remove("popup__form__input-error-message_active");
+    e.classList.remove("popup__input-error-message_active");
   });
 
   inputs.forEach((i) => {
-    i.classList.remove("popup__form__input-error-message");
+    i.classList.remove("popup__input-error-message");
   });
 }
 
@@ -198,16 +198,16 @@ function toggleButtonState(inputs, button) {
 
 function showInputError(form, input, message) {
   const error = form.querySelector(`.${input.name}-input-error`);
-  input.classList.add("popup__form__input-error-message");
+  input.classList.add("popup__input-error-message");
   error.textContent = message;
-  error.classList.add("popup__form__input-error-message_active");
+  error.classList.add("popup__input-error-message_active");
 }
 
 function hideInputError(form, input) {
   const error = form.querySelector(`.${input.name}-input-error`);
-  input.classList.remove("popup__form__input-error-message");
+  input.classList.remove("popup__input-error-message");
   error.textContent = "";
-  error.classList.remove("popup__form__input-error-message_active");
+  error.classList.remove("popup__input-error-message_active");
 }
 
 function checkInputValidity(form, input) {
