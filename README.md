@@ -12,6 +12,7 @@ Users can:
 - Add new cards via a modal form.
 - View an enlarged version of each card image in a popup.
 - Edit profile information (name and description).
+- See real-time validation messages when filling out forms.
 
 ## 🧩 Main Features
 
@@ -22,19 +23,22 @@ Users can:
 - Delete button to remove cards from the DOM.
 - Dynamic DOM updates when adding, liking, or deleting cards.
 - Initial cards loaded from the `initialCards` array.
+- Form validation with custom error messages and disabled submit button when invalid.
+- Automatic reset of form state and errors when closing modals.
 
 ## 🛠️ Technologies Used
 
 - **HTML5** → Semantic structure and template usage for cards.
-- **CSS3** → Styling for cards, modals, and modular layout.
-- **JavaScript** → DOM manipulation, form handling, and interactive card logic.
+- **CSS3** → Styling for cards, modals, validation states, and modular layout.
+- **JavaScript** → DOM manipulation, modal handling, form validation, and interactive card logic.
 
 ## ♻️ Data Flow Overview
 
 1. The page loads initial cards from the `initialCards` array.
 2. Users can interact with each card: like, delete, or view enlarged image.
 3. When a new card is added via the form, it is inserted at the top of the card list (`prepend`).
-4. Profile and new card forms update the DOM and close the modal after submission.
+4. Profile and new card forms validate inputs in real time.
+5. After successful submission, the modal closes and resets all fields and error states.
 
 ## 🔧 Future Improvements
 
