@@ -125,6 +125,22 @@
   margin: 0;
 }
 
+.name-input-error,
+.description-input-error,
+.place-name-input-error,
+.link-input-error {
+  display: none;
+  color: red;
+  font-size: 12px;
+}
+
+.popup__form__input-error-message {
+  border-bottom: 1px solid red;
+}
+.popup__form__input-error-message_active {
+  display: block;
+}
+
 @media screen and (max-width: 544px) {
   .popup {
     bottom: 112px;

@@ -89,30 +89,30 @@ const captionElement = imageModal.querySelector(".popup__caption");
 const editButtonSubmit = editForm.querySelector(".popup__button");
 /* Funçao Abrir PopUp */
 
-function openModal(arg, modal) {
-  arg.addEventListener("click", function () {
-    modal.classList.add("popup_is-opened");
-  });
+function openModal(modal) {
+  modal.classList.add("popup_is-opened");
 }
 
 /* Funçao Fechar PopUp */
 
-function closeModal(arg, modal) {
-  arg.addEventListener("click", function () {
-    modal.classList.remove("popup_is-opened");
-  });
+function closeModal(modal) {
+  modal.classList.remove("popup_is-opened");
 }
-
 /* Funçao Para preencher os Campos nome e descrição */
 function fillProfileForm() {
   nameInput.value = profileTitle.textContent;
   aboutInput.value = profileDescription.textContent;
 }
 /* Funçao Para abrir o modo de edição e preencher os Campos nome e descrição */
+
 function handleOpenEditModal() {
   fillProfileForm();
-  checkFormValidity();
-  openModal(editButton, editModal);
+
+  const inputs = editForm.querySelectorAll(".popup__input");
+  const button = editForm.querySelector(".popup__button");
+  toggleButtonState(inputs, button);
+
+  openModal(editModal);
 }
 /* Funçao Para Alterar os Campos nome e descrição e depois salvar*/
 
@@ -134,11 +134,12 @@ editButton.addEventListener("click", handleOpenEditModal);
 
 /*Fechando o Popup de Editar*/
 
-closeModal(closeEditButton, editModal);
+closeEditButton.addEventListener("click", () => closeModal(editModal));
 
 /*Salvando as Informacoes*/
-openModal(newCardButton, newModal);
-closeModal(closeNewCardButton, newModal);
+
+newCardButton.addEventListener("click", () => openModal(newModal));
+closeNewCardButton.addEventListener("click", () => closeModal(newModal));
 
 editForm.addEventListener("submit", handleProfileFormSubmit);
 
@@ -158,7 +159,7 @@ function openImageModal(name, link) {
   captionElement.textContent = name; // Atualiza a legenda
   imageModal.classList.add("popup_is-opened"); // Abre o modal
 }
-closeModal(closeImageButton, imageModal);
+closeImageButton.addEventListener("click", () => closeModal(imageModal));
 
 /*Criando Função para Gerar Cards*/
 function getCardElement(name, link) {
@@ -226,7 +227,81 @@ function handleCardFormSubmit(evt) {
 }
 newCardForm.addEventListener("submit", handleCardFormSubmit);
 
-function checkFormValidity() {
-  editButtonSubmit.disabled = !editForm.checkValidity();
+function hasInvalidInput(inputList) {
+  return Array.from(inputList).some((input) => {
+    return !input.validity.valid;
+  });
 }
-editForm.addEventListener("input", checkFormValidity);
+
+function toggleButtonState(inputList, buttonElement) {
+  if (hasInvalidInput(inputList)) {
+    buttonElement.disabled = true;
+  } else {
+    buttonElement.disabled = false;
+  }
+}
+/*
+const formElement = editForm;
+
+const inputs = formElement.querySelectorAll(".popup__input");
+
+toggleButtonState(inputs, editButtonSubmit);
+*/
+function showInputError(formElement, element, errorMessage) {
+  const errorElement = formElement.querySelector(
+    `.${element.name}-input-error`
+  );
+  element.classList.add("popup__form__input-error-message");
+  errorElement.textContent = errorMessage;
+  errorElement.classList.add("popup__form__input-error-message_active");
+}
+
+function hideInputError(formElement, element) {
+  const errorElement = formElement.querySelector(
+    `.${element.name}-input-error`
+  );
+  element.classList.remove("popup__form__input-error-message");
+  errorElement.classList.remove("popup__form__input-error-message_active");
+  errorElement.textContent = "";
+}
+
+function checkInputValidity(formElement, inputElement) {
+  if (!inputElement.validity.valid) {
+    showInputError(formElement, inputElement, inputElement.validationMessage);
+  } else {
+    hideInputError(formElement, inputElement);
+  }
+}
+/*
+
+inputs.forEach((input) => {
+  input.addEventListener("input", function () {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage);
+    } else {
+      hideInputError(input);
+    }
+
+    toggleButtonState(inputs, editButtonSubmit);
+  });
+});
+
+*/
+
+function enableValidation(formSelector) {
+  const formElement = document.querySelector(formSelector);
+  const inputList = formElement.querySelectorAll(".popup__input");
+  const buttonElement = formElement.querySelector(".popup__button");
+
+  toggleButtonState(inputList, buttonElement);
+
+  inputList.forEach((input) => {
+    input.addEventListener("input", () => {
+      checkInputValidity(formElement, input);
+      toggleButtonState(inputList, buttonElement);
+    });
+  });
+}
+
+enableValidation("#edit-profile-form");
+enableValidation("#new-card-form");
