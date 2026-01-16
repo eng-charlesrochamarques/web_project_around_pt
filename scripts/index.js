@@ -115,6 +115,12 @@ function handleOpenEditModal() {
   toggleButtonState(inputs, button);
   openModal(editModal);
 }
+function handleOpenNewCardModal() {
+  const inputs = newCardForm.querySelectorAll(".popup__input");
+  const button = newCardForm.querySelector(".popup__button");
+  toggleButtonState(inputs, button);
+  openModal(newModal);
+}
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -247,7 +253,7 @@ enableValidation("#new-card-form");
 ===================== */
 
 editButton.addEventListener("click", handleOpenEditModal);
-newCardButton.addEventListener("click", () => openModal(newModal));
+newCardButton.addEventListener("click", handleOpenNewCardModal);
 
 closeEditButton.addEventListener("click", () => closeModalWithReset(editModal));
 closeNewCardButton.addEventListener("click", () =>
