@@ -2,73 +2,139 @@
 
 ## 📌 Project Description
 
-**"Around The U.S."** is an interactive web application that allows users to explore locations, add new travel cards, and manage profile information dynamically.
+**Around The U.S.** is an interactive web application that allows users to explore travel locations, manage profile information, and dynamically add new cards with images and titles.
 
-Users can:
-
-- View location cards with images and names.
-- Like individual cards by clicking the "like" button.
-- Delete cards from the feed.
-- Add new cards via a modal form.
-- View an enlarged version of each card image in a popup.
-- Edit profile information (name and description).
-- See real-time validation messages when filling out forms.
+The project focuses on **modular JavaScript architecture**, clean separation of responsibilities, and real-time form validation using native HTML5 validation APIs.
 
 ---
 
-## 🧩 Main Features
+## ✨ Features
 
-- Profile edit modal with auto-filled existing data.
-- Modal to add new travel cards dynamically.
-- Image preview modal with caption for each card.
-- Like button on each card that toggles its appearance.
-- Delete button to remove cards from the DOM.
-- Dynamic DOM updates when adding, liking, or deleting cards.
-- Initial cards loaded from the `initialCards` array.
-- Form validation with custom error messages and disabled submit button when invalid.
-- Automatic reset of form state and errors when closing modals.
+Users can:
+
+- 📸 View location cards with image and title.
+- ❤️ Like and unlike individual cards.
+- 🗑️ Delete cards from the list.
+- ➕ Add new travel cards via a popup form.
+- 🔍 View an enlarged version of each image in a popup.
+- 👤 Edit profile name and description.
+- ⚠️ See real-time form validation messages.
+- 🚫 Submit buttons are automatically disabled when forms are invalid.
+- 🔄 Validation errors persist correctly until resolved.
+
+---
+
+## 🧩 Main Functionalities
+
+- **Profile Edit Popup**
+  - Opens with current user data pre-filled.
+  - Updates profile information on submit.
+
+- **Add New Card Popup**
+  - Allows users to add a new location with title and image URL.
+  - New cards are rendered dynamically in the card list.
+
+- **Image Preview Popup**
+  - Displays the clicked card image in full size with caption.
+
+- **Form Validation**
+  - Implemented via a reusable `FormValidator` class.
+  - Uses native browser validation (`validity`, `validationMessage`).
+  - Displays error messages under each input field.
+  - Automatically disables submit buttons when inputs are invalid.
 
 ---
 
 ## 🗂️ Project Architecture
 
-The project follows a **modular JavaScript architecture** with a clear separation of responsibilities:
+The project follows a **class-based, modular structure**:
 
-- **`index.js`**  
-  Handles page-specific logic, DOM initialization, event binding, and class instantiation.
+### 📄 `index.js`
 
-- **`components/Card.js`**  
-  Defines the `Card` class responsible for creating, rendering, and managing individual card behavior (like, delete, and image click).
+- Entry point of the application.
+- Responsible for:
+  - Instantiating classes.
+  - Connecting components together.
+  - Handling page-level logic and event listeners.
+  - Creating cards via the `createCard` factory function.
 
-- **`utils/utils.js`**  
-  Contains reusable utility functions for opening and closing modals, handling the Escape key, and detecting overlay clicks.
+### 📁 `components/`
 
-This structure improves code readability, maintainability, and scalability.
+- **`Card.js`**
+  - Handles rendering of a single card.
+  - Manages like, delete, and image click interactions.
+
+- **`Section.js`**
+  - Responsible for rendering lists of items (cards).
+  - Abstracts logic for adding items to the DOM.
+
+- **`Popup.js`**
+  - Base popup class with open/close logic.
+
+- **`PopupWithForm.js`**
+  - Extends `Popup`.
+  - Handles form submission and data extraction.
+
+- **`PopupWithImage.js`**
+  - Extends `Popup`.
+  - Displays images and captions in a modal.
+
+- **`UserInfo.js`**
+  - Manages user profile data (name and description).
+
+- **`FormValidator.js`**
+  - Encapsulates all form validation logic.
+  - Controls error messages, input error states, and submit button activation.
+
+### 📁 `utils/`
+
+- **`constants.js`**
+  - Stores configuration and static data:
+    - Initial cards array.
+    - Validation configuration object.
+
+This architecture improves **readability, maintainability, and scalability**, while keeping responsibilities clearly separated.
+
+---
+
+## 🔁 Data Flow Overview
+
+1. Initial cards are loaded from the `initialCards` array.
+2. Cards are rendered using the `Section` class.
+3. Each card instance handles its own interactions.
+4. Forms are validated in real time using `FormValidator`.
+5. On successful submission:
+   - Data is processed.
+   - The DOM is updated dynamically.
+   - The popup is closed.
 
 ---
 
 ## 🛠️ Technologies Used
 
-- **HTML5** → Semantic structure and template usage for cards.
-- **CSS3** → Styling for cards, modals, validation states, and modular layout.
-- **JavaScript (ES6 Modules)** → Class-based components, modular utilities, DOM manipulation, modal handling, and form validation.
+- **HTML5**
+  - Semantic structure.
+  - `<template>` usage for card markup.
+  - Native form validation attributes.
+
+- **CSS3**
+  - Responsive layout.
+  - Popup styling.
+  - Validation and error states.
+
+- **JavaScript (ES6 Modules)**
+  - Classes and inheritance.
+  - Modular file structure.
+  - DOM manipulation.
+  - Event handling.
 
 ---
 
-## ♻️ Data Flow Overview
+## 🚀 Future Improvements
 
-1. The page loads initial cards from the `initialCards` array.
-2. Users can interact with each card: like, delete, or view the enlarged image.
-3. When a new card is added via the form, it is inserted at the top of the card list using `prepend()`.
-4. Forms validate inputs in real time, while modal behavior is handled through reusable utility functions.
-5. After successful submission, the modal closes and resets all fields and error states.
-
----
-
-## 🔧 Future Improvements
-
-- 💾 Persist data using **LocalStorage** or a backend API.
-- 📱 Improve responsiveness for mobile devices.
-- 📊 Add filtering or categorization for cards.
-- 🌓 Implement light/dark mode toggle.
-- 🔐 Optional login for multiple users and personalized profiles.
+- 💾 Persist cards and profile data using **LocalStorage** or a backend API.
+- 📱 Improve mobile responsiveness.
+- 🔎 Add card filtering or search functionality.
+- 🌓 Implement light/dark mode.
+- 🔐 Add authentication for multiple users.
+- ♻️ Reset validation state automatically on popup close.
