@@ -70,6 +70,7 @@
           <h3 class="popup__title">Editar perfil</h3>
           <form class="popup__form" id="edit-profile-form" novalidate>
             <input
+              id="name"
               class="popup__input popup__input_type_name"
               name="name"
               placeholder="Nome"
@@ -78,8 +79,12 @@
               minlength="2"
               maxlength="40"
             />
-            <span class="name-input-error popup__input-error"></span>
+            <span
+              id="name-error"
+              class="name-input-error popup__input-error"
+            ></span>
             <input
+              id="description"
               class="popup__input popup__input_type_description"
               name="description"
               placeholder="Sobre mim"
@@ -88,7 +93,10 @@
               minlength="2"
               maxlength="200"
             />
-            <span class="description-input-error popup__input-error"></span>
+            <span
+              id="description-error"
+              class="description-input-error popup__input-error"
+            ></span>
             <button class="button popup__button" type="submit">Salvar</button>
           </form>
         </div>
@@ -103,24 +111,32 @@
           <h3 class="popup__title">Novo local</h3>
           <form class="popup__form" id="new-card-form" novalidate>
             <input
+              id="place-name"
               class="popup__input popup__input_type_card-name"
-              name="place-name"
+              name="name"
               placeholder="Título"
               required
               minlength="2"
               maxlength="30"
               type="text"
             />
-            <span class="place-name-input-error popup__input-error"></span>
+            <span
+              id="place-name-error"
+              class="place-name-input-error popup__input-error"
+            ></span>
 
             <input
+              id="link"
               class="popup__input popup__input_type_url"
               name="link"
               placeholder="Link de Imagem"
               required
               type="url"
             />
-            <span class="link-input-error popup__input-error"></span>
+            <span
+              id="link-error"
+              class="link-input-error popup__input-error"
+            ></span>
             <button class="button popup__button" type="submit">Criar</button>
           </form>
         </div>
@@ -137,6 +153,6 @@
         </div>
       </div>
     </div>
-    <script type="module" src="scripts/index.js"></script>
+    <script type="module" src="scripts/pages/index.js"></script>
   </body>
 </html>
