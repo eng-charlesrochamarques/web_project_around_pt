@@ -4,7 +4,18 @@ import { PopupWithImage } from "../components/PopupWithImage.js";
 import { PopupWithForm } from "../components/PopupWithForm.js";
 import { UserInfo } from "../components/UserInfo.js";
 import { FormValidator } from "../components/FormValidator.js";
-import { initialCards, validationConfig } from "../utils/constants.js";
+import { validationConfig } from "../utils/constants.js";
+import { Api } from "../components/Api.js";
+import { PopupWithConfirmation } from "../components/PopupWithConfirmation.js";
+
+/* ===== API ===== */
+const api = new Api({
+  baseUrl: "https://around-api.pt-br.tripleten-services.com/v1",
+  headers: {
+    authorization: "60a0ce93-b3b0-4305-8ca5-c7d5ff4ceaa5",
+    "Content-Type": "application/json",
+  },
+});
 
 /* ===== User ===== */
 const userInfo = new UserInfo({
@@ -30,40 +41,125 @@ const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
 
 const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
-  userInfo.setUserInfo({
-    name: data.name,
-    description: data.description,
-  });
-  editProfilePopup.close();
+  api
+    .editProfile(data)
+    .then((res) => {
+      userInfo.setUserInfo({
+        name: res.name,
+        description: res.about,
+      });
+
+      editProfilePopup.close();
+    })
+    .catch((err) => console.log(err));
 });
 editProfilePopup.setEventListeners();
 
 const newCardPopup = new PopupWithForm("#new-card-popup", (data) => {
-  cardSection.addItem(createCard(data));
-  newCardPopup.close();
+  api
+    .addCard(data)
+    .then((card) => {
+      cardSection.addItem(createCard(card));
+      newCardPopup.close();
+    })
+    .catch((err) => console.log(err));
 });
 newCardPopup.setEventListeners();
+const deletePopup = new PopupWithConfirmation(
+  "#delete-popup",
+  (cardId, element) => {
+    api
+      .deleteCard(cardId)
+      .then(() => {
+        element.remove();
+        deletePopup.close();
+      })
+      .catch(console.log);
+  },
+);
+
+deletePopup.setEventListeners();
 
 /* ===== Cards ===== */
+let userId;
 function createCard(data) {
-  const card = new Card(data, "#card-template", (name, link) => {
-    imagePopup.open(name, link);
-  });
+  console.log("Creating card:", data.name);
+  console.log("Card likes:", data.likes);
+  console.log("UserId passed to card:", userId);
+  const card = new Card(
+    data,
+    "#card-template",
 
-  return card.getCardElement();
+    (name, link) => {
+      imagePopup.open(name, link);
+    },
+
+    (cardId, isLiked) => {
+      if (!isLiked) {
+        api
+          .likeCard(cardId)
+          .then((updatedCard) => {
+            console.log("API RESPONSE:", updatedCard);
+            console.log("UPDATED LIKES:", updatedCard.likes);
+            card.setIsLiked(updatedCard.isLiked);
+          })
+          .catch(console.log);
+      } else {
+        api
+          .unlikeCard(cardId)
+          .then((updatedCard) => {
+            card.setIsLiked(updatedCard.isLiked);
+          })
+          .catch(console.log);
+      }
+    },
+
+    (cardId, element) => {
+      deletePopup.setCard(cardId, element);
+      deletePopup.open();
+    },
+    userId,
+  );
+
+  const cardElement = card.getCardElement();
+
+  const ownerId = data.owner._id || data.owner;
+
+  if (ownerId !== userId) {
+    card.hideDeleteButton();
+  }
+
+  //card.setLikes(data.likes);
+  card.setLikes(data.isLiked);
+  return cardElement;
 }
 
 const cardSection = new Section(
   {
-    items: initialCards,
     renderer: (item) => {
-      cardSection.addItem(createCard(item));
+      return createCard(item);
     },
   },
   ".cards__list",
 );
 
-cardSection.renderItems();
+//cardSection.renderItems();
+
+Promise.all([api.getUserInfo(), api.getInitialCards()]).then(
+  ([userData, cards]) => {
+    userId = userData._id;
+
+    console.log("USER ID:", userId);
+    console.log("CARDS FROM API:", cards);
+
+    userInfo.setUserInfo({
+      name: userData.name,
+      description: userData.about,
+    });
+
+    cardSection.renderItems(cards);
+  },
+);
 
 /* ===== Buttons ===== */
 document
