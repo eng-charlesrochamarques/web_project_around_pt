@@ -18,9 +18,11 @@ const api = new Api({
 });
 
 /* ===== User ===== */
+const avatarEditButton = document.querySelector(".profile__image-edit");
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
   descriptionSelector: ".profile__description",
+  avatarSelector: ".profile__image",
 });
 
 /* ===== Validation ===== */
@@ -41,6 +43,8 @@ const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
 
 const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
+  editProfilePopup.renderLoading(true, "Salvando...");
+
   api
     .editProfile(data)
     .then((res) => {
@@ -51,34 +55,64 @@ const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
 
       editProfilePopup.close();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
+    .finally(() => {
+      editProfilePopup.renderLoading(false);
+    });
 });
 editProfilePopup.setEventListeners();
 
 const newCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+  newCardPopup.renderLoading(true, "Criando...");
+
   api
     .addCard(data)
     .then((card) => {
       cardSection.addItem(createCard(card));
       newCardPopup.close();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
+    .finally(() => {
+      newCardPopup.renderLoading(false);
+    });
 });
 newCardPopup.setEventListeners();
 const deletePopup = new PopupWithConfirmation(
   "#delete-popup",
   (cardId, element) => {
+    deletePopup.renderLoading(true);
+
     api
       .deleteCard(cardId)
       .then(() => {
         element.remove();
         deletePopup.close();
       })
-      .catch(console.log);
+      .catch(console.log)
+      .finally(() => {
+        deletePopup.renderLoading(false);
+      });
   },
 );
 
 deletePopup.setEventListeners();
+
+const avatarPopup = new PopupWithForm("#edit-avatar-modal", handleAvatarSubmit);
+function handleAvatarSubmit(data) {
+  avatarPopup.renderLoading(true, "Salvando...");
+
+  api
+    .updateAvatar(data.avatar)
+    .then((res) => {
+      userInfo.setAvatar(res.avatar);
+      avatarPopup.close();
+    })
+    .catch((err) => console.log(err))
+    .finally(() => {
+      avatarPopup.renderLoading(false);
+    });
+}
+avatarPopup.setEventListeners();
 
 /* ===== Cards ===== */
 let userId;
@@ -161,6 +195,14 @@ Promise.all([api.getUserInfo(), api.getInitialCards()]).then(
   },
 );
 
+/* ===== Avatar validation ===== */
+const avatarFormValidator = new FormValidator(
+  validationConfig,
+  document.querySelector("#edit-avatar-form"),
+);
+
+avatarFormValidator.setEventListeners();
+
 /* ===== Buttons ===== */
 document
   .querySelector(".profile__edit-button")
@@ -171,13 +213,18 @@ document
     document.querySelector(".popup__input_type_description").value =
       userData.description;
 
-    // 🔹 reset da validação
     editFormValidator.resetValidation();
     editProfilePopup.open();
   });
 
 document.querySelector(".profile__add-button").addEventListener("click", () => {
-  // 🔹 reset da validação
   newCardFormValidator.resetValidation();
   newCardPopup.open();
 });
+
+if (avatarEditButton) {
+  avatarEditButton.addEventListener("click", () => {
+    avatarFormValidator.resetValidation();
+    avatarPopup.open();
+  });
+}

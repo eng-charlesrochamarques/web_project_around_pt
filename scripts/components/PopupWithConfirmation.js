@@ -6,6 +6,8 @@ export class PopupWithConfirmation extends Popup {
 
     this._handleConfirm = handleConfirm;
     this._submitButton = this._popup.querySelector(".popup__button");
+
+    this._buttonText = this._submitButton.textContent;
   }
 
   setCard(cardId, cardElement) {
@@ -19,5 +21,12 @@ export class PopupWithConfirmation extends Popup {
     this._submitButton.addEventListener("click", () => {
       this._handleConfirm(this._cardId, this._cardElement);
     });
+  }
+  renderLoading(isLoading) {
+    if (isLoading) {
+      this._submitButton.textContent = "Deletando...";
+    } else {
+      this._submitButton.textContent = this._buttonText;
+    }
   }
 }

@@ -18,7 +18,19 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+          <div class="profile__image-container">
+            <img
+              class="profile__image"
+              src="./images/avatar.jpg"
+              alt="Avatar"
+            />
+            <button
+              class="profile__image-edit"
+              aria-label="Editar avatar"
+              type="button"
+            ></button>
+          </div>
+
           <div class="profile__info">
             <h1 class="profile__title">Jacques Cousteau</h1>
             <button
@@ -28,6 +40,7 @@
             ></button>
             <p class="profile__description">Explorador</p>
           </div>
+
           <button
             aria-label="Adicionar cartão"
             class="profile__add-button"
@@ -157,6 +170,28 @@
           <button class="popup__close"></button>
           <h3 class="popup__title">Tem certeza?</h3>
           <button class="popup__button">Sim</button>
+        </div>
+      </div>
+      <div class="popup" id="edit-avatar-modal">
+        <div class="popup__content">
+          <button type="button" class="popup__close"></button>
+
+          <h3 class="popup__title">Alterar foto do perfil</h3>
+
+          <form class="popup__form" id="edit-avatar-form" name="avatar">
+            <input
+              id="avatar"
+              type="url"
+              name="avatar"
+              class="popup__input"
+              placeholder="Link da imagem"
+              required
+            />
+
+            <span id="avatar-error" class="popup__input-error"></span>
+
+            <button type="submit" class="button popup__button">Salvar</button>
+          </form>
         </div>
       </div>
     </div>
